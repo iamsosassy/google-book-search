@@ -1,8 +1,8 @@
 const path = require('path')
 const router = require('express').Router();
-const apiRoutes = require('./api');
+//const apiRoutes = require('./api/books.js');
 
-router.use('/api', apiRoutes);
+//router.use('/api', apiRoutes);
 
 // routes for books
 router.use((req, res) => {
