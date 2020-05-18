@@ -1,61 +1,63 @@
-import React, { useState } from 'react';
-import './App.css';
-import Axios from 'axios';
+import React from "react";
+import Form from "../components/Form";
+import Results from "../components/Results";
+import API from "../utils/API";
 
-function App() {
+class Search extends React.Component {
+    state = {
+        value: "",
+        books: []
+    };
 
-
-    const [state, setState] = useState({
-        searchTerm: '',
-        apiBooks: []
-    });
-
-
-    const handleTyping = (event) => {
-        console.log('we r typign!!', event.target.value)
-        //var newstate = state
-        //newstate.searchTerm = eve
-        setState({ ...state, searchTerm: event.target.value })
+    componentDidMount() {
+        this.searchBook();
     }
 
-    const handleClick = () => {
-        Axios.get('https://www.googleapis.com/books/v1/volumes?q=' + state.searchTerm + '&download=epub&key=AIzaSyAgITQ56Hp5iZIxTIjCWTHIpC3Hcu53tDc').then(function (data) {
-            console.log('data', data)
-            var cleanedBooks = []
-            for (let i = 0; i < data.data.items.length; i++) {
-                var newBook = {
-                    title: data.data.items[i].volumeInfo.title,
-                    desription: '' // for real put data.data.items[i].descriptiopn
-                }
-                cleanedBooks.push(newBook)
-            }
-            console.log('newBook', cleanedBooks)
-            setState({ ...state, apiBooks: cleanedBooks })
-            // declae empty arrey var books = []
-            //for loop thru data and pick off just waht we want
-            //set state with just the good cleaned up array
-        })
+    makeBook = bookData => {
+        return {
+            _id: bookData.id,
+            title: bookData.volumeInfo.title,
+            authors: bookData.volumeInfo.authors,
+            description: bookData.volumeInfo.description,
+            image: bookData.volumeInfo.imageLinks.thumbnail,
+            link: bookData.volumeInfo.previewLink
+        }
     }
 
-    console.log('this is our state', state)
+    searchBook = query => {
+        API.getBook(query)
+            .then(res => this.setState({ books: res.data.items.map(bookData => this.makeBook(bookData)) }))
+            .catch(err => console.error(err));
+    };
 
-    return (
-        <div className="App">
+    handleInputChange = event => {
+        const name = event.target.name;
+        const value = event.target.value;
+        this.setState({
+            [name]: value
+        });
+    };
 
-            <p>Search a book</p>
-            <input onChange={handleTyping}></input>
-            <button onClick={handleClick}>Serach</button>
-            {state.apiBooks.map(function (singleBook) {
-                return (
-                    <div>
-                        <h1>{singleBook.title}</h1>
-                        <button>Save</button>
+    handleFormSubmit = event => {
+        event.preventDefault();
+        this.searchBook(this.state.search);
+    };
 
-                    </div>
-                )
-            })}
-        </div>
-    );
+    render() {
+        return (
+            <div>
+                <Form
+                    search={this.state.search}
+                    handleInputChange={this.handleInputChange}
+                    handleFormSubmit={this.handleFormSubmit}
+                />
+                <div className="container">
+                    <h2>Results</h2>
+                    <Results books={this.state.books} />
+                </div>
+            </div>
+        )
+    }
 }
 
-export default App;
+export default Search;
