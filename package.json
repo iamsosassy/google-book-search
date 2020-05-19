@@ -1,6 +1,10 @@
 {
   "name": "google-books",
   "version": "1.0.0",
+  "engines": {
+    "node": "v13.3.0",
+    "npm": "6.13.1"
+  },
   "description": "Google Books",
   "main": "server.js",
   "scripts": {
