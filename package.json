@@ -8,24 +8,35 @@
   "description": "Google Books",
   "main": "server.js",
   "scripts": {
-    "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
+    "start": "if-env NODE_ENV='production' && npm run start:prod || npm run start:dev",
     "start:prod": "node server.js",
-    "start:dev": "concurrently -k \"nodemon --ignore 'client/*'\" \"npm run client\"",
+    "start:dev": "concurrently \"nodemon server.js --ignore 'client/*'\" \"npm run client\" ",
     "client": "cd client && npm run start",
     "install": "cd client && npm install",
     "build": "cd client && npm run build",
     "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "babel-eslint": "9.0.0",
     "concurrently": "^4.1.0",
+    "dotenv": "^6.2.0",
+    "eslint": "5.6.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-react-app": "^3.0.6",
+    "eslint-plugin-flowtype": "^3.2.1",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.11.0",
     "nodemon": "^1.18.7"
   },
   "dependencies": {
-    "axios": "^0.19.0",
     "express": "^4.16.3",
     "if-env": "^1.0.4",
-    "mongoose": "^5.6.7"
+    "mongoose": "^5.6.7",
+    "react-scripts": "^1.1.4"
   }
 }
